@@ -1,0 +1,36 @@
+{
+  "name": "astro-base",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev --host",
+    "start": "astro dev --host",
+    "build": "astro check && astro build",
+    "build:no-check": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "update": "npx -p npm-check-updates -c \"ncu -u && npm i\""
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.7.0",
+    "@swup/a11y-plugin": "^5.0.0",
+    "@swup/debug-plugin": "^4.0.4",
+    "@swup/fragment-plugin": "^1.1.1",
+    "@swup/head-plugin": "^2.2.0",
+    "@swup/parallel-plugin": "^0.4.0",
+    "@swup/preload-plugin": "^3.2.10",
+    "@swup/scroll-plugin": "^3.3.2",
+    "alpinejs": "^3.14.1",
+    "astro": "^4.11.3",
+    "gsap": "^3.12.5",
+    "sass": "^1.77.6",
+    "swup": "^4.6.1",
+    "tweakpane": "^4.0.4",
+    "typescript": "^5.5.2"
+  },
+  "devDependencies": {
+    "@tweakpane/core": "^2.0.4",
+    "@types/alpinejs": "^3.13.10",
+    "vite-plugin-qrcode": "^0.2.3"
+  }
+}
