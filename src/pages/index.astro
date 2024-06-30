@@ -1,9 +1,21 @@
 ---
 import Page from "@/layouts/Page.astro";
+//microCMS呼び出し
+import { getBlogs } from "../library/microcms";
+const response = await getBlogs({ fields: ["id", "title"] });
 ---
 
 <Page title="TOP" pageClass="index">
   <div class="wrap">
     <h1>TOP</h1>
+    <ul>
+      {
+        response.contents.map((content: any) => (
+          <li>
+            <a href={content.id}>{content.title}</a>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </Page>
