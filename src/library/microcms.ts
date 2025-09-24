@@ -8,7 +8,7 @@ const client = createClient({
 });
 
 //型定義
-export type Blog = {
+export type Article = {
   id: string;
   createdAt: string;
   updatedAt: string;
@@ -17,23 +17,23 @@ export type Blog = {
   title: string;
   content: string;
 };
-export type BlogResponse = {
+export type ArticleResponse = {
   totalCount: number;
   offset: number;
   limit: number;
-  contents: Blog[];
+  contents: Article[];
 };
 
 //APIの呼び出し
-export const getBlogs = async (queries?: MicroCMSQueries) => {
-  return await client.get<BlogResponse>({ endpoint: "blogs", queries });
+export const getArticles = async (queries?: MicroCMSQueries) => {
+  return await client.get<ArticleResponse>({ endpoint: "articles", queries });
 };
-export const getBlogDetail = async (
+export const getArticleDetail = async (
   contentId: string,
   queries?: MicroCMSQueries
 ) => {
-  return await client.getListDetail<Blog>({
-    endpoint: "blogs",
+  return await client.getListDetail<Article>({
+    endpoint: "articles",
     contentId,
     queries,
   });
