@@ -52,6 +52,16 @@ const response = await getArticles({ fields: ["id", "title"] });
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 1;
+      width: 600px !important;
+      height: 600px !important;
+
+      canvas {
+        width: 600px !important;
+        height: 600px !important;
+        display: block !important;
+        max-width: none !important;
+        max-height: none !important;
+      }
     }
 
     h1 {

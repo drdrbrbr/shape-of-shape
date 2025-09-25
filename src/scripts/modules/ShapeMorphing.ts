@@ -7,28 +7,41 @@ export class ShapeMorphing {
   private currentShape: any = null;
   private targetShape: any = null;
   private morphProgress: number = 0;
-  private morphSpeed: number = 0.05; // モーフィング速度
+  private morphSpeed: number = 0.08; // モーフィング速度
 
   constructor() {
-    new p5((p: p5) => {
-      this.p = p;
-      this.setup();
-      this.setupDraw();
-    });
+    const canvasContainer = document.getElementById("p5-canvas");
+    if (canvasContainer) {
+      new p5((p: p5) => {
+        this.p = p;
+        
+        p.setup = () => {
+          this.setup();
+        };
+        
+        p.draw = () => {
+          this.draw();
+        };
+      }, canvasContainer);
+    }
   }
 
   private setup(): void {
-    const canvas = this.p.createCanvas(400, 400);
-    canvas.parent("p5-canvas");
+    // ピクセル密度を1に固定（高解像度ディスプレイ対策）
+    this.p.pixelDensity(1);
+    
+    // キャンバスを作成
+    this.p.createCanvas(600, 600);
+
+    const canvas = (this.p as any)._renderer.canvas as HTMLCanvasElement;
+    // スタイルを強制的に設定
+    canvas.style.width = '600px';
+    canvas.style.height = '600px';
+
     // 最初の形を生成
     this.targetShape = this.generateNewShape();
   }
 
-  private setupDraw(): void {
-    this.p.draw = () => {
-      this.draw();
-    };
-  }
 
   private draw(): void {
     // 完全にクリア
@@ -77,17 +90,17 @@ export class ShapeMorphing {
     const centerX = this.p.width / 2;
     const centerY = this.p.height / 2;
     const size = this.p.random(150, 180);
-    const numShapes = this.p.floor(this.p.random(1, 6));
+    const numShapes = this.p.floor(this.p.random(1, 5));
 
     const shapes = [];
     for (let i = 0; i < numShapes; i++) {
       const shape = {
-        x: centerX + this.p.random(-size / 6, size / 6),
-        y: centerY + this.p.random(-size / 6, size / 6),
+        x: centerX + this.p.random(-size / 2, size / 2),
+        y: centerY + this.p.random(-size / 2, size / 2),
         rotation: this.p.random(this.p.TWO_PI),
         size: this.p.random(size * 0.9, size * 0.9),
         vertices: this.generateVertices(
-          this.p.random(3, 8),
+          this.p.random(3, 10),
           this.p.random(size * 0.9, size * 0.9)
         ),
       };
@@ -225,23 +238,11 @@ export class ShapeMorphing {
       this.p.beginShape();
       const vertices = shape.vertices;
 
-      // curveVertexを使用して滑らかな曲線を作成
+      // splineVertexを使用して滑らかな曲線を作成
       if (vertices.length > 0) {
-        this.p.curveVertex(vertices[0].x, vertices[0].y);
-        this.p.curveVertex(vertices[0].x, vertices[0].y);
-
         for (let vertex of vertices) {
-          this.p.curveVertex(vertex.x, vertex.y);
+          (this.p as any).splineVertex(vertex.x, vertex.y);
         }
-
-        this.p.curveVertex(
-          vertices[vertices.length - 1].x,
-          vertices[vertices.length - 1].y
-        );
-        this.p.curveVertex(
-          vertices[vertices.length - 1].x,
-          vertices[vertices.length - 1].y
-        );
       }
       this.p.endShape(this.p.CLOSE);
       this.p.pop();
