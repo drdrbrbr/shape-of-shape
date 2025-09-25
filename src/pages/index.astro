@@ -52,8 +52,10 @@ const response = await getArticles({ fields: ["id", "title"] });
       left: 50%;
       transform: translate(-50%, -50%);
       z-index: 1;
-      width: 600px !important;
-      height: 600px !important;
+      @include mq(sp) {
+        scale: 0.5;
+        transform: translate(-100%, -105%);
+      }
 
       canvas {
         width: 600px !important;
@@ -87,6 +89,11 @@ const response = await getArticles({ fields: ["id", "title"] });
         line-height: 100%;
         transition: transform 0.2s var(--ease-quint-out);
       }
+      @include mq(sp) {
+        font-size: 10vh;
+        font-weight: 200;
+        height: 95vh;
+      }
     }
     .jp_title {
       font-size: get_pc_vw(12);
@@ -97,22 +104,45 @@ const response = await getArticles({ fields: ["id", "title"] });
       top: 50%;
       right: 25%;
       transform: translateY(-50%);
+      @include mq(sp) {
+        text-align: center;
+        font-size: get_sp_vw(24);
+        top: 70%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+      }
     }
   }
   .wrap {
     padding: 0 get_pc_vw(8);
+    @include mq(sp) {
+      padding: 0 24px;
+    }
     ul {
+      margin-top: 40px;
       display: flex;
       flex-wrap: wrap;
       gap: get_pc_vw(66);
+      @include mq(sp) {
+        gap: 0vw;
+        justify-content: space-between;
+      }
       li {
         font-size: get_pc_vw(12);
         position: relative;
+        @include mq(sp) {
+          font-size: get_sp_vw(32);
+        }
         a {
           width: get_pc_vw(170);
           height: get_pc_vw(170);
           display: block;
           padding: get_pc_vw(8) 0 0 get_pc_vw(8);
+          @include mq(sp) {
+            width: 43vw;
+            height: 43vw;
+          }
           &:hover {
             background-color: var(--key-color);
             color: #fff;

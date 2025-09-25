@@ -28,15 +28,9 @@ export class ShapeMorphing {
 
   private setup(): void {
     // ピクセル密度を1に固定（高解像度ディスプレイ対策）
-    this.p.pixelDensity(1);
     
     // キャンバスを作成
     this.p.createCanvas(600, 600);
-
-    const canvas = (this.p as any)._renderer.canvas as HTMLCanvasElement;
-    // スタイルを強制的に設定
-    canvas.style.width = '600px';
-    canvas.style.height = '600px';
 
     // 最初の形を生成
     this.targetShape = this.generateNewShape();
