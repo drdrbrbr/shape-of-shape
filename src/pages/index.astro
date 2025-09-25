@@ -17,8 +17,13 @@ const response = await getArticles({ fields: ["id", "title"] });
         <span>S</span><span>H</span><span>A</span><span>P</span><span>E</span>
       </div>
     </h1>
-    <p class="jp_title">かたち の かたち</p>
+    <p class="jp_title">
+      <span>か</span><span>た</span><span>ち</span>
+      <span> </span><span>の</span>
+      <span>か</span><span>た</span><span>ち</span>
+    </p>
   </div>
+
   <div class="wrap">
     <ul>
       {
@@ -112,6 +117,11 @@ const response = await getArticles({ fields: ["id", "title"] });
         transform: translate(-50%, -50%);
         width: 100%;
       }
+      span {
+        display: inline-block;
+        line-height: 100%;
+        transition: transform 0.2s var(--ease-quint-out);
+      }
     }
   }
   .wrap {
@@ -168,25 +178,38 @@ const response = await getArticles({ fields: ["id", "title"] });
   // p5.jsでランダムな形を描画
   import { ShapeMorphing } from "../scripts/modules/ShapeMorphing";
   document.addEventListener("DOMContentLoaded", function () {
-    const spans = document.querySelectorAll(".kv span");
+    const en_spans = document.querySelectorAll(".kv h1 span");
+    const jp_spans = document.querySelectorAll(".kv .jp_title span");
     const rotations = [0, 90, 180, 270];
 
     // 初期回転を設定
     function setRandomRotations() {
-      spans.forEach((span) => {
+      en_spans.forEach((span) => {
         const randomRotation =
           rotations[Math.floor(Math.random() * rotations.length)];
         (span as HTMLElement).style.transform = `rotate(${randomRotation}deg)`;
       });
     }
 
+    function setRandomY() {
+      jp_spans.forEach((span) => {
+        const randomY = Math.floor(Math.random() * 100);
+        (span as HTMLElement).style.transform = `translateY(${randomY}px)`;
+      });
+    }
+
     // 初期設定
     setRandomRotations();
+    setRandomY();
 
     // 2秒ごとに回転を変更
     setInterval(() => {
       setRandomRotations();
-    }, 2000);
+    }, 2040);
+
+    setInterval(() => {
+      setRandomY();
+    }, 2030);
 
     new ShapeMorphing();
   });
