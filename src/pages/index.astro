@@ -45,7 +45,7 @@ const response = await getArticles({ fields: ["id", "title"] });
 
 <style lang="scss">
   .kv {
-    height: 100vh;
+    height: 100dvh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -80,7 +80,7 @@ const response = await getArticles({ fields: ["id", "title"] });
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
-      height: 90vh;
+      height: 90dvh;
       position: relative;
       z-index: 2;
       div {
@@ -97,7 +97,7 @@ const response = await getArticles({ fields: ["id", "title"] });
       @include mq(sp) {
         font-size: 10vh;
         font-weight: 200;
-        height: 95vh;
+        height: 95dvh;
       }
     }
     .jp_title {
@@ -112,7 +112,7 @@ const response = await getArticles({ fields: ["id", "title"] });
       @include mq(sp) {
         text-align: center;
         font-size: get_sp_vw(24);
-        top: 70%;
+        top: 65%;
         left: 50%;
         transform: translate(-50%, -50%);
         width: 100%;
