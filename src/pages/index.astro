@@ -69,7 +69,7 @@ const response = await getArticles({ fields: ["id", "title"] });
     h1 {
       font-weight: 200;
       font-style: italic;
-      font-size: 20vh;
+      font-size: 16vh;
       width: 90%;
       display: flex;
       flex-direction: column;
@@ -146,6 +146,8 @@ const response = await getArticles({ fields: ["id", "title"] });
           &:hover {
             background-color: var(--key-color);
             color: #fff;
+            rotate: 180deg;
+            transition: rotate 0.2s var(--ease-quint-out);
           }
           .index {
             font-weight: 600;
@@ -167,15 +169,24 @@ const response = await getArticles({ fields: ["id", "title"] });
   import { ShapeMorphing } from "../scripts/modules/ShapeMorphing";
   document.addEventListener("DOMContentLoaded", function () {
     const spans = document.querySelectorAll(".kv span");
+    const rotations = [0, 90, 180, 270];
 
-    spans.forEach((span) => {
-      // 0, 90, 180, 270度の中からランダムに選択
-      const rotations = [0, 90, 180, 270];
-      const randomRotation =
-        rotations[Math.floor(Math.random() * rotations.length)];
+    // 初期回転を設定
+    function setRandomRotations() {
+      spans.forEach((span) => {
+        const randomRotation =
+          rotations[Math.floor(Math.random() * rotations.length)];
+        (span as HTMLElement).style.transform = `rotate(${randomRotation}deg)`;
+      });
+    }
 
-      (span as HTMLElement).style.transform = `rotate(${randomRotation}deg)`;
-    });
+    // 初期設定
+    setRandomRotations();
+
+    // 2秒ごとに回転を変更
+    setInterval(() => {
+      setRandomRotations();
+    }, 2000);
 
     new ShapeMorphing();
   });

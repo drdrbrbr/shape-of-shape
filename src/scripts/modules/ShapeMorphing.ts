@@ -7,7 +7,7 @@ export class ShapeMorphing {
   private currentShape: any = null;
   private targetShape: any = null;
   private morphProgress: number = 0;
-  private morphSpeed: number = 0.08; // モーフィング速度
+  private morphSpeed: number = 0.2; // モーフィング速度
 
   constructor() {
     const canvasContainer = document.getElementById("p5-canvas");
@@ -42,6 +42,13 @@ export class ShapeMorphing {
     this.p.clear();
     this.p.background(0, 0, 0, 0);
 
+    // 初期化時の即座描画
+    if (!this.currentShape && this.targetShape) {
+      this.currentShape = this.targetShape;
+      this.drawMorphedShape(this.currentShape);
+      return;
+    }
+
     // 2秒ごとに新しい形を生成
     if (this.p.millis() - this.lastTime >= this.interval) {
       this.lastTime = this.p.millis();
@@ -50,12 +57,8 @@ export class ShapeMorphing {
       this.morphProgress = 0; // モーフィングをリセット
     }
 
-    // モーフィング中または初期化
-    if (this.targetShape) {
-      if (!this.currentShape) {
-        this.currentShape = this.targetShape;
-      }
-
+    // モーフィング中
+    if (this.targetShape && this.currentShape) {
       // モーフィング進行
       this.morphProgress += this.morphSpeed;
       if (this.morphProgress > 1) this.morphProgress = 1;
@@ -70,12 +73,6 @@ export class ShapeMorphing {
         easedProgress
       );
       this.drawMorphedShape(morphedShape);
-    } else {
-      // 初期化時に最初の形を描画
-      if (!this.targetShape) {
-        this.targetShape = this.generateNewShape();
-        this.currentShape = this.targetShape;
-      }
     }
   }
 

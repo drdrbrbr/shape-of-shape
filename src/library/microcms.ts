@@ -16,6 +16,7 @@ export type Article = {
   revisedAt: string;
   title: string;
   content: string;
+  katachi: string;
 };
 export type ArticleResponse = {
   totalCount: number;
