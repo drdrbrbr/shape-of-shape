@@ -28,7 +28,7 @@
     "p5": "^2.0.5",
     "sass": "^1.77.6",
     "swup": "^4.6.1",
-    "tweakpane": "^4.0.4",
+    "tweakpane": "^4.0.5",
     "typescript": "^5.5.2"
   },
   "devDependencies": {
