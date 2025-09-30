@@ -174,14 +174,27 @@ const article = await getArticleDetail(articleId as string);
           font-size: 12px;
         }
       }
+
+      // iframe全般に対するスタイル
+      iframe {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+        aspect-ratio: 16 / 9; // 一般的な動画の比率
+        border: none;
+        border-radius: 8px;
+        margin: 24px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
     }
   }
 </style>
 
 <script>
+  // iframelyのShadow DOM内のスタイルをカスタマイズ
   document.addEventListener("DOMContentLoaded", function () {
+    // 既存のspan回転アニメーション
     const spans = document.querySelectorAll(".logo .en_title span");
-
     setInterval(() => {
       spans.forEach((span) => {
         const rotations = [0, 90, 180, 270, 360];
@@ -190,5 +203,131 @@ const article = await getArticleDetail(articleId as string);
         (span as HTMLElement).style.transform = `rotate(${randomRotation}deg)`;
       });
     }, 1000);
+
+    // iframelyの埋め込みを監視して、ロード後にスタイルを調整
+    const observeIframely = () => {
+      const iframelyEmbeds = document.querySelectorAll(".iframely-embed");
+
+      iframelyEmbeds.forEach((embed) => {
+        // 方法1: attachShadow後の要素を探す
+        const divWithShadow = embed.querySelector("div:first-child");
+
+        // 方法2: 全ての子要素をチェック
+        embed.querySelectorAll("div").forEach((div) => {
+          if (div.shadowRoot) {
+            console.log("Shadow root found:", div);
+            applyCustomStyles(div.shadowRoot);
+          }
+        });
+
+        // 方法3: iframely APIが完全に読み込まれた後に再チェック
+        if (window.iframely) {
+          window.iframely.on("rendered", function (widget) {
+            console.log("iframely rendered:", widget);
+            const shadowDiv =
+              widget.querySelector && widget.querySelector("div");
+            if (shadowDiv && shadowDiv.shadowRoot) {
+              applyCustomStyles(shadowDiv.shadowRoot);
+            }
+          });
+        }
+      });
+    };
+
+    // スタイルを適用する関数
+    const applyCustomStyles = (shadowRoot) => {
+      // 既存のカスタムスタイルがない場合のみ追加
+      if (!shadowRoot.querySelector("style[data-custom]")) {
+        const styleEl = document.createElement("style");
+        styleEl.setAttribute("data-custom", "true");
+        styleEl.textContent = `
+            /* 背景色を透明に */
+            .w, .wf, .wt, ._sc, ._sm {
+              background: transparent !important;
+              border-color: transparent !important;
+            }
+            
+            /* テキストサイズを小さく */
+            .t, .th, .td, .tf {
+              font-size: 12px !important;
+              color: var(--key-color) !important;
+            }
+            .th {
+              font-size: 13px !important;
+            }
+            .tf, .tw, .tc {
+              font-size: 11px !important;
+            }
+            
+            /* パディングを調整 */
+            .wt {
+              padding: 4px 0 !important;
+            }
+            ._sc .wf {
+              padding: 6px !important;
+            }
+            
+            /* 全体のボーダーを調整 */
+            .body {
+              box-shadow: unset !important;
+              border: 0px solid #e0e0e0 !important;
+              border-radius: 0px !important;
+              color: var(--key-color) !important;
+            }
+          `;
+        shadowRoot.appendChild(styleEl);
+        console.log("Custom styles applied to shadow root");
+      }
+    };
+
+    // 初回実行（複数回試行）
+    setTimeout(observeIframely, 100);
+    setTimeout(observeIframely, 500);
+    setTimeout(observeIframely, 1000);
+    setTimeout(observeIframely, 2000);
+
+    // 動的に追加される埋め込みにも対応
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.nodeType === 1) {
+            // Element node
+            // iframely-embedクラスを持つ要素、またはその子要素を確認
+            if (node.classList && node.classList.contains("iframely-embed")) {
+              setTimeout(() => observeIframely(), 100);
+            } else if (
+              node.querySelector &&
+              node.querySelector(".iframely-embed")
+            ) {
+              setTimeout(() => observeIframely(), 100);
+            }
+          }
+        });
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+
+    // iframelyのグローバルイベントも監視
+    if (window.iframely) {
+      window.iframely.on("ready", function () {
+        console.log("iframely ready");
+        setTimeout(observeIframely, 100);
+      });
+    }
+
+    // iframelyスクリプトの読み込み完了を待つ
+    const checkIframely = setInterval(() => {
+      if (window.iframely && window.iframely.on) {
+        clearInterval(checkIframely);
+        window.iframely.on("ready", () => {
+          console.log("iframely ready (interval check)");
+          observeIframely();
+        });
+      }
+    }, 100);
   });
 </script>
