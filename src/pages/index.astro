@@ -2,7 +2,7 @@
 import Page from "@/layouts/Page.astro";
 //microCMS呼び出し
 import { getArticles } from "../library/microcms";
-const response = await getArticles({ fields: ["id", "title"] });
+const response = await getArticles({ fields: ["id", "title"], limit: 100 });
 ---
 
 <Page title="TOP" pageClass="index">
