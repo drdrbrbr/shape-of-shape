@@ -69,12 +69,16 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
           {nextArticle && (
             <a class="next" href={`/${nextArticle.id}`}>
               <span class="direction">← 次</span>{" "}
-              <span>{nextArticle.title.replace(/\n/g, "")}</span>
+              <span class="an_title">
+                {nextArticle.title.replace(/\n/g, "")}
+              </span>
             </a>
           )}
           {prevArticle && (
             <a class="prev" href={`/${prevArticle.id}`}>
-              <span>{prevArticle.title.replace(/\n/g, "")}</span>{" "}
+              <span class="an_title">
+                {prevArticle.title.replace(/\n/g, "")}
+              </span>{" "}
               <span class="direction">前 →</span>
             </a>
           )}
@@ -187,6 +191,9 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
       letter-spacing: 0.2em;
       line-height: 1.4em;
       margin-top: 20px;
+      @include mq(sp) {
+        font-size: 36px;
+      }
     }
     .thumb {
       max-width: 780px;
@@ -209,15 +216,19 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
         font-size: 32px;
         font-weight: 500;
         margin: 64px 0 40px;
+        line-height: 1.4em;
         @include mq(sp) {
           margin: 40px 0 20px;
+          font-size: 28px;
         }
       }
       h3 {
         font-size: 24px;
         margin: 64px 0 40px;
+        line-height: 1.4em;
         @include mq(sp) {
           margin: 40px 0 20px;
+          font-size: 20px;
         }
       }
       p {
@@ -281,9 +292,22 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
           display: inline-block;
           @include mq(sp) {
             &.direction {
-              width: 40px;
+              width: 50px;
+            }
+            &.an_title {
+              width: calc(100% - 50px);
             }
           }
+        }
+      }
+      .next .an_title {
+        @include mq(sp) {
+          text-align: right;
+        }
+      }
+      .prev .an_title {
+        @include mq(sp) {
+          text-align: left;
         }
       }
     }

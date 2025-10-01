@@ -142,7 +142,7 @@ const response = await getArticles({
   .wrap {
     padding: 0 get_pc_vw(8);
     @include mq(sp) {
-      padding: 0 24px;
+      padding: 0 8px;
     }
     ul {
       margin-top: 40px;
@@ -178,6 +178,9 @@ const response = await getArticles({
             font-weight: 600;
             line-height: 100%;
             letter-spacing: 0.02em;
+            @include mq(sp) {
+              font-size: get_sp_vw(24);
+            }
           }
           .title {
             display: block;
