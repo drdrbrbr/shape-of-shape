@@ -154,7 +154,7 @@ const response = await getArticles({
         justify-content: space-between;
       }
       li {
-        font-size: get_pc_vw(12);
+        font-size: get_pc_vw(16);
         position: relative;
         @include mq(sp) {
           font-size: get_sp_vw(32);
@@ -178,6 +178,7 @@ const response = await getArticles({
             font-weight: 600;
             line-height: 100%;
             letter-spacing: 0.02em;
+            font-size: get_pc_vw(12);
             @include mq(sp) {
               font-size: get_sp_vw(24);
             }
