@@ -69,12 +69,12 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
           {nextArticle && (
             <a class="next" href={`/${nextArticle.id}`}>
               <span class="direction">← 次</span>{" "}
-              <span>{nextArticle.title}</span>
+              <span>{nextArticle.title.replace(/\n/g, "")}</span>
             </a>
           )}
           {prevArticle && (
             <a class="prev" href={`/${prevArticle.id}`}>
-              <span>{prevArticle.title}</span>{" "}
+              <span>{prevArticle.title.replace(/\n/g, "")}</span>{" "}
               <span class="direction">前 →</span>
             </a>
           )}
@@ -119,12 +119,13 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
     z-index: 2;
 
     @include mq(sp) {
-      padding: 48px 0 0 48px;
       scale: 0.6;
       translate: 0px 0;
       rotate: 0deg;
       transform-origin: left top;
-      position: static;
+      position: absolute;
+      top: 24px;
+      left: 24px;
     }
 
     &:hover {
@@ -172,7 +173,7 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
   main {
     padding: 64px;
     @include mq(sp) {
-      padding: 40px 16px 0 16px;
+      padding: 240px 24px 0 24px;
     }
     .num {
       font-size: 12px;
@@ -257,7 +258,7 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
       @include mq(sp) {
         margin-top: 40px;
         flex-direction: column;
-        gap: 16px;
+        gap: 32px;
         font-size: 16px;
       }
       a {
@@ -268,6 +269,8 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
         line-height: 140%;
         @include mq(sp) {
           justify-content: space-between;
+          gap: 16px;
+          padding: 0px;
         }
         &:hover {
           background-color: var(--key-color);
@@ -278,7 +281,7 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
           display: inline-block;
           @include mq(sp) {
             &.direction {
-              width: 50px;
+              width: 40px;
             }
           }
         }
@@ -288,17 +291,22 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
 </style>
 
 <script>
+  // インターバルIDをモジュールスコープに保持
+  let logoInterval: number | undefined;
+
   function initArticleScript() {
+    // 既存インターバルをクリア
+    if (logoInterval) clearInterval(logoInterval);
     // 既存のspan回転アニメーション
     const spans = document.querySelectorAll(".logo .en_title span");
-    setInterval(() => {
+    logoInterval = window.setInterval(() => {
       spans.forEach((span) => {
         const rotations = [0, 90, 180, 270, 360];
         const randomRotation =
           rotations[Math.floor(Math.random() * rotations.length)];
         (span as HTMLElement).style.transform = `rotate(${randomRotation}deg)`;
       });
-    }, 1000);
+    }, 400);
 
     // iframeの読み込み完了を待つ
     const iframes = document.querySelectorAll("iframe");

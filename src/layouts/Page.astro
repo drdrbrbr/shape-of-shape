@@ -17,6 +17,9 @@ const params = Astro.params;
       image={image}
     />
     <ViewTransitions />
+    <script type="module">
+      import "/src/scripts/global.ts";
+    </script>
   </head>
   <body x-data>
     <Header isFrontPage={isFrontPage} />

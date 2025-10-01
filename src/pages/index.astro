@@ -200,6 +200,11 @@ const response = await getArticles({
 <script>
   // p5.jsでランダムな形を描画
   import { ShapeMorphing } from "../scripts/modules/ShapeMorphing";
+
+  // インターバルIDをモジュールスコープに保持
+  let rotationInterval: number | undefined;
+  let yInterval: number | undefined;
+
   function initKvAnimation() {
     const en_spans = document.querySelectorAll(".kv h1 span");
     const jp_spans = document.querySelectorAll(".kv .jp_title span");
@@ -223,12 +228,15 @@ const response = await getArticles({
     setRandomRotations();
     setRandomY();
 
-    setInterval(setRandomRotations, 2040);
-    setInterval(setRandomY, 2030);
+    // 既存インターバルをクリアしてから再設定
+    if (rotationInterval) clearInterval(rotationInterval);
+    if (yInterval) clearInterval(yInterval);
+
+    rotationInterval = window.setInterval(setRandomRotations, 2040);
+    yInterval = window.setInterval(setRandomY, 2030);
 
     new ShapeMorphing();
   }
 
-  document.addEventListener("DOMContentLoaded", initKvAnimation);
-  document.addEventListener("astro:after-swap", initKvAnimation);
+  document.addEventListener("astro:page-load", initKvAnimation);
 </script>
