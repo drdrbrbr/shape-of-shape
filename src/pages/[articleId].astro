@@ -68,12 +68,14 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
         <nav class="article-nav">
           {nextArticle && (
             <a class="next" href={`/${nextArticle.id}`}>
-              <span>← 次</span> <span>{nextArticle.title}</span>
+              <span class="direction">← 次</span>{" "}
+              <span>{nextArticle.title}</span>
             </a>
           )}
           {prevArticle && (
             <a class="prev" href={`/${prevArticle.id}`}>
-              <span>{prevArticle.title}</span> <span>前 →</span>
+              <span>{prevArticle.title}</span>{" "}
+              <span class="direction">前 →</span>
             </a>
           )}
         </nav>
@@ -97,6 +99,9 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
     svg {
       width: auto;
       height: 80vh;
+      path {
+        fill: var(--key-color);
+      }
     }
   }
   .logo {
@@ -250,12 +255,21 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
       display: flex;
       justify-content: space-between;
       gap: 24px;
+      @include mq(sp) {
+        margin-top: 40px;
+        flex-direction: column;
+        gap: 16px;
+        font-size: 16px;
+      }
       a {
         display: flex;
         gap: 16px;
         padding: 8px;
         border-radius: 4px;
-        line-height: 100%;
+        line-height: 140%;
+        @include mq(sp) {
+          justify-content: space-between;
+        }
         &:hover {
           background-color: var(--key-color);
           color: #fff;
@@ -263,6 +277,11 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
         }
         span {
           display: inline-block;
+          @include mq(sp) {
+            &.direction {
+              width: 50px;
+            }
+          }
         }
       }
     }
@@ -303,7 +322,7 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
                 body.style.setProperty("box-shadow", "0 0 0 0", "important");
                 wt.style.setProperty("padding", "0px", "important");
                 bdr.style.setProperty("border", "none", "important");
-                bg.style.setProperty("background", "transparent", "important");
+                bg.style.setProperty("background", "#fff", "important");
                 a.style.setProperty("color", "var(--key-color)", "important");
                 t.style.setProperty("color", "var(--key-color)", "important");
               }
@@ -326,9 +345,9 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
             const t = root.querySelector(".wt .t") as HTMLElement;
             if (bg) {
               body.style.setProperty("box-shadow", "0 0 0 0", "important");
-              wt.style.setProperty("padding", "0px", "important");
+              wt.style.setProperty("padding", "10px", "important");
               bdr.style.setProperty("border", "none", "important");
-              bg.style.setProperty("background", "transparent", "important");
+              bg.style.setProperty("background", "#fff", "important");
               a.style.setProperty("color", "var(--key-color)", "important");
               t.style.setProperty("color", "var(--key-color)", "important");
             }
