@@ -24,7 +24,7 @@ const { articleId } = Astro.params;
 const article = await getArticleDetail(articleId as string);
 ---
 
-<Page title="My first article with Astro">
+<Page title={article.title} image={article.thumb?.url}>
   <a href="/" class="logo">
     <div class="en_title">
       <div>
