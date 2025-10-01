@@ -52,7 +52,7 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
     </div>
     <div class="jp_title">かたち の かたち</div>
   </a>
-  <main>
+  <div class="main">
     <span class="num">({articleId})</span>
     <h1 class="title" set:html={article.title.replace(/\n/g, "<br>")} />
     <!-- <p class="publishedAt">公開日時：{article.publishedAt}</p> -->
@@ -81,7 +81,7 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
         </nav>
       )
     }
-  </main>
+  </div>
   <div class="katachi" set:html={article.katachi} />
 </Page>
 
@@ -251,7 +251,6 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
       font-size: 20px;
       font-weight: 500;
       letter-spacing: 0.05em;
-      padding: 8px;
       display: flex;
       justify-content: space-between;
       gap: 24px;
