@@ -2,7 +2,10 @@
 import Page from "@/layouts/Page.astro";
 //microCMS呼び出し
 import { getArticles } from "../library/microcms";
-const response = await getArticles({ fields: ["id", "title"], limit: 100 });
+const response = await getArticles({
+  fields: ["id", "title", "thumb"],
+  limit: 100,
+});
 ---
 
 <Page title="TOP" pageClass="index">
@@ -27,17 +30,29 @@ const response = await getArticles({ fields: ["id", "title"], limit: 100 });
   <div class="wrap">
     <ul>
       {
-        response.contents.map((content: any) => (
-          <li>
-            <a href={`/${content.id}`}>
-              <span class="index">{`(${content.id})`}</span>
-              <span
-                class="title"
-                set:html={content.title.replace(/\n/g, "<br>")}
-              />
-            </a>
-          </li>
-        ))
+        response.contents.map(
+          (content: any) => (
+            console.log(content),
+            (
+              <li>
+                <a href={`/${content.id}`}>
+                  <span class="index">{`(${content.id})`}</span>
+                  <span
+                    class="title"
+                    set:html={content.title.replace(/\n/g, "<br>")}
+                  />
+                  {content.thumb && (
+                    <img
+                      class="thumb"
+                      src={content.thumb.url}
+                      alt={content.title}
+                    />
+                  )}
+                </a>
+              </li>
+            )
+          )
+        )
       }
     </ul>
   </div>
@@ -168,6 +183,14 @@ const response = await getArticles({ fields: ["id", "title"], limit: 100 });
             display: block;
             margin-top: get_pc_vw(10);
           }
+          .thumb {
+            max-width: 80%;
+            height: auto;
+            margin-top: get_pc_vw(10);
+            position: absolute;
+            bottom: 0;
+            right: 0;
+          }
         }
       }
     }
@@ -177,12 +200,11 @@ const response = await getArticles({ fields: ["id", "title"], limit: 100 });
 <script>
   // p5.jsでランダムな形を描画
   import { ShapeMorphing } from "../scripts/modules/ShapeMorphing";
-  document.addEventListener("DOMContentLoaded", function () {
+  function initKvAnimation() {
     const en_spans = document.querySelectorAll(".kv h1 span");
     const jp_spans = document.querySelectorAll(".kv .jp_title span");
     const rotations = [0, 90, 180, 270];
 
-    // 初期回転を設定
     function setRandomRotations() {
       en_spans.forEach((span) => {
         const randomRotation =
@@ -198,19 +220,15 @@ const response = await getArticles({ fields: ["id", "title"], limit: 100 });
       });
     }
 
-    // 初期設定
     setRandomRotations();
     setRandomY();
 
-    // 2秒ごとに回転を変更
-    setInterval(() => {
-      setRandomRotations();
-    }, 2040);
-
-    setInterval(() => {
-      setRandomY();
-    }, 2030);
+    setInterval(setRandomRotations, 2040);
+    setInterval(setRandomY, 2030);
 
     new ShapeMorphing();
-  });
+  }
+
+  document.addEventListener("DOMContentLoaded", initKvAnimation);
+  document.addEventListener("astro:after-swap", initKvAnimation);
 </script>

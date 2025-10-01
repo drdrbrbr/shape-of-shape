@@ -17,6 +17,11 @@ export type Article = {
   title: string;
   content: string;
   katachi: string;
+  thumb?: {
+    url: string;
+    width?: number;
+    height?: number;
+  };
 };
 export type ArticleResponse = {
   totalCount: number;

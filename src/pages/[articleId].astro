@@ -7,12 +7,14 @@ export async function getStaticPaths() {
   const response = await getArticles({ fields: ["id"], limit: 100 });
   console.log(
     "Available article IDs:",
-    response.contents.map((c: any) => c.id)
+    response.contents.map((c: any) => c.id),
+    response.contents.map((c: any) => c.thumb)
   );
   return response.contents.map((content: any) => ({
     params: {
       articleId: content.id,
       katachi: content.katachi,
+      thumb: content.thumb,
     },
   }));
 }
@@ -39,6 +41,11 @@ const article = await getArticleDetail(articleId as string);
     <span class="num">({articleId})</span>
     <h1 class="title" set:html={article.title.replace(/\n/g, "<br>")} />
     <!-- <p class="publishedAt">公開日時：{article.publishedAt}</p> -->
+    {
+      article.thumb && (
+        <img class="thumb" src={article.thumb.url} alt={article.title} />
+      )
+    }
     <div class="post" set:html={article.content} />
   </main>
   <div class="katachi" set:html={article.katachi} />
@@ -142,6 +149,14 @@ const article = await getArticleDetail(articleId as string);
       letter-spacing: 0.2em;
       line-height: 1.4em;
       margin-top: 20px;
+    }
+    .thumb {
+      max-width: 780px;
+      height: auto;
+      margin: 40px 0;
+      @include mq(sp) {
+        width: 100%;
+      }
     }
     .post {
       margin-top: 56px;
