@@ -2,6 +2,8 @@
 import Page from "@/layouts/Page.astro";
 import { getArticles, getArticleDetail } from "../library/microcms";
 
+// 次の記事取得用
+
 // 詳細記事ページの全パスを取得
 export async function getStaticPaths() {
   const response = await getArticles({ fields: ["id"], limit: 100 });
@@ -19,9 +21,22 @@ export async function getStaticPaths() {
   }));
 }
 
-//記事の詳細情報を取得
+// 記事の詳細情報を取得
 const { articleId } = Astro.params;
 const article = await getArticleDetail(articleId as string);
+
+// 全記事を公開日時順に取得して次の記事を特定
+const articlesList = await getArticles({
+  fields: ["id", "title"],
+  orders: "publishedAt",
+  limit: 100,
+});
+const index = articlesList.contents.findIndex((a) => a.id === articleId);
+const nextArticle =
+  index >= 0 && index < articlesList.contents.length - 1
+    ? articlesList.contents[index + 1]
+    : null;
+const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
 ---
 
 <Page title={article.title} image={article.thumb?.url}>
@@ -47,6 +62,23 @@ const article = await getArticleDetail(articleId as string);
       )
     }
     <div class="post" set:html={article.content} />
+
+    {
+      (prevArticle || nextArticle) && (
+        <nav class="article-nav">
+          {nextArticle && (
+            <a class="next" href={`/${nextArticle.id}`}>
+              <span>← 次</span> <span>{nextArticle.title}</span>
+            </a>
+          )}
+          {prevArticle && (
+            <a class="prev" href={`/${prevArticle.id}`}>
+              <span>{prevArticle.title}</span> <span>前 →</span>
+            </a>
+          )}
+        </nav>
+      )
+    }
   </main>
   <div class="katachi" set:html={article.katachi} />
 </Page>
@@ -135,7 +167,7 @@ const article = await getArticleDetail(articleId as string);
   main {
     padding: 64px;
     @include mq(sp) {
-      padding: 40px 24px 0 24px;
+      padding: 40px 16px 0 16px;
     }
     .num {
       font-size: 12px;
@@ -153,9 +185,10 @@ const article = await getArticleDetail(articleId as string);
     .thumb {
       max-width: 780px;
       height: auto;
-      margin: 40px 0;
+      margin: 40px 0 0;
       @include mq(sp) {
         width: 100%;
+        margin: 20px 0 0;
       }
     }
     .post {
@@ -170,14 +203,23 @@ const article = await getArticleDetail(articleId as string);
         font-size: 32px;
         font-weight: 500;
         margin: 64px 0 40px;
+        @include mq(sp) {
+          margin: 40px 0 20px;
+        }
       }
       h3 {
         font-size: 24px;
         margin: 64px 0 40px;
+        @include mq(sp) {
+          margin: 40px 0 20px;
+        }
       }
       p {
         margin: 40px 0;
         font-size: 16px;
+        @include mq(sp) {
+          margin: 32px 0;
+        }
       }
       blockquote {
         background-color: #cad6ebbc;
@@ -199,11 +241,36 @@ const article = await getArticleDetail(articleId as string);
         margin: 40px 0;
       }
     }
+    .article-nav {
+      margin-top: 80px;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      padding: 8px;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      a {
+        display: flex;
+        gap: 16px;
+        padding: 8px;
+        border-radius: 4px;
+        line-height: 100%;
+        &:hover {
+          background-color: var(--key-color);
+          color: #fff;
+          transition: background-color 0.2s var(--ease-quint-out);
+        }
+        span {
+          display: inline-block;
+        }
+      }
+    }
   }
 </style>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  function initArticleScript() {
     // 既存のspan回転アニメーション
     const spans = document.querySelectorAll(".logo .en_title span");
     setInterval(() => {
@@ -221,47 +288,43 @@ const article = await getArticleDetail(articleId as string);
       iframes.forEach((iframe) => {
         iframe.addEventListener("load", () => {
           document.querySelectorAll(".iframely-embed div").forEach((div) => {
-            // Shadow Rootが存在するかチェック
-            console.log(div.shadowRoot);
-            if (div.shadowRoot) {
-              const wtElement = div.shadowRoot.querySelector(".wt");
-              const t = div.shadowRoot.querySelector(".t");
-              if (wtElement) {
-                (wtElement as HTMLElement).style.setProperty(
-                  "color",
-                  "var(--key-color)",
-                  "important"
-                );
-              }
-              if (t) {
-                (t as HTMLElement).style.setProperty(
-                  "color",
-                  "var(--key-color)",
-                  "important"
-                );
+            const root =
+              div.shadowRoot ||
+              div.querySelector("iframe")?.contentWindow?.document;
+            console.log(root);
+            if (root) {
+              const body = root.querySelector(".body") as HTMLElement;
+              const bg = root.querySelector("._sm") as HTMLElement;
+              const bdr = root.querySelector("._sm") as HTMLElement;
+              const a = root.querySelector(".wt a") as HTMLElement;
+              const t = root.querySelector(".wt .t") as HTMLElement;
+              console.log(body, bg, bdr, a, t);
+              if (bg) {
+                body.style.setProperty("box-shadow", "0 0 0 0", "important");
+                body.style.setProperty("padding", "transparent", "important");
+                bdr.style.setProperty("border", "none", "important");
+                bg.style.setProperty("background", "transparent", "important");
+                a.style.setProperty("color", "var(--key-color)", "important");
+                t.style.setProperty("color", "var(--key-color)", "important");
               }
             }
           });
         });
       });
     } else {
-      console.log("end");
       // iframeがない場合は即座に実行
       setTimeout(() => {
         document.querySelectorAll(".iframely-embed div").forEach((div) => {
-          console.log(div.shadowRoot);
-          if (div.shadowRoot) {
-            const body = div.shadowRoot.querySelector(".body") as HTMLElement;
-            const bg = div.shadowRoot.querySelector("._sm") as HTMLElement;
-            const bdr = div.shadowRoot.querySelector("._sm") as HTMLElement;
-            const a = div.shadowRoot.querySelector(".wt a") as HTMLElement;
-            const t = div.shadowRoot.querySelector(".wt .t") as HTMLElement;
+          const root = div.shadowRoot || div.querySelector("iframe");
+          console.log(root);
+          if (root) {
+            const body = root.querySelector(".body") as HTMLElement;
+            const bg = root.querySelector("._sm") as HTMLElement;
+            const bdr = root.querySelector("._sm") as HTMLElement;
+            const a = root.querySelector(".wt a") as HTMLElement;
+            const t = root.querySelector(".wt .t") as HTMLElement;
             if (bg) {
-              body.style.setProperty(
-                "box-shadow",
-                "0px 0px 0px 0px",
-                "important"
-              );
+              body.style.setProperty("box-shadow", "0 0 0 0", "important");
               body.style.setProperty("padding", "transparent", "important");
               bdr.style.setProperty("border", "none", "important");
               bg.style.setProperty("background", "transparent", "important");
@@ -270,7 +333,10 @@ const article = await getArticleDetail(articleId as string);
             }
           }
         });
-      }, 1000);
+      }, 3000);
     }
-  });
+  }
+
+  document.addEventListener("DOMContentLoaded", initArticleScript);
+  document.addEventListener("astro:after-swap", initArticleScript);
 </script>
