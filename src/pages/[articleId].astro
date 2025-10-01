@@ -294,14 +294,14 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
             console.log(root);
             if (root) {
               const body = root.querySelector(".body") as HTMLElement;
+              const wt = root.querySelector(".wt") as HTMLElement;
               const bg = root.querySelector("._sm") as HTMLElement;
               const bdr = root.querySelector("._sm") as HTMLElement;
               const a = root.querySelector(".wt a") as HTMLElement;
               const t = root.querySelector(".wt .t") as HTMLElement;
-              console.log(body, bg, bdr, a, t);
               if (bg) {
                 body.style.setProperty("box-shadow", "0 0 0 0", "important");
-                body.style.setProperty("padding", "transparent", "important");
+                wt.style.setProperty("padding", "0px", "important");
                 bdr.style.setProperty("border", "none", "important");
                 bg.style.setProperty("background", "transparent", "important");
                 a.style.setProperty("color", "var(--key-color)", "important");
@@ -319,13 +319,14 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
           console.log(root);
           if (root) {
             const body = root.querySelector(".body") as HTMLElement;
+            const wt = root.querySelector(".wt") as HTMLElement;
             const bg = root.querySelector("._sm") as HTMLElement;
             const bdr = root.querySelector("._sm") as HTMLElement;
             const a = root.querySelector(".wt a") as HTMLElement;
             const t = root.querySelector(".wt .t") as HTMLElement;
             if (bg) {
               body.style.setProperty("box-shadow", "0 0 0 0", "important");
-              body.style.setProperty("padding", "transparent", "important");
+              wt.style.setProperty("padding", "0px", "important");
               bdr.style.setProperty("border", "none", "important");
               bg.style.setProperty("background", "transparent", "important");
               a.style.setProperty("color", "var(--key-color)", "important");
@@ -333,7 +334,7 @@ const prevArticle = index > 0 ? articlesList.contents[index - 1] : null;
             }
           }
         });
-      }, 3000);
+      }, 1000);
     }
   }
 
