@@ -4,7 +4,11 @@ import { getArticles, getArticleDetail } from "../library/microcms";
 
 // 詳細記事ページの全パスを取得
 export async function getStaticPaths() {
-  const response = await getArticles({ fields: ["id"] });
+  const response = await getArticles({ fields: ["id"], limit: 100 });
+  console.log(
+    "Available article IDs:",
+    response.contents.map((c: any) => c.id)
+  );
   return response.contents.map((content: any) => ({
     params: {
       articleId: content.id,
@@ -174,6 +178,11 @@ const article = await getArticleDetail(articleId as string);
           font-size: 12px;
         }
       }
+      img {
+        max-width: 100%;
+        height: auto;
+        margin: 40px 0;
+      }
     }
   }
 </style>
@@ -190,5 +199,63 @@ const article = await getArticleDetail(articleId as string);
         (span as HTMLElement).style.transform = `rotate(${randomRotation}deg)`;
       });
     }, 1000);
+
+    // iframeの読み込み完了を待つ
+    const iframes = document.querySelectorAll("iframe");
+    if (iframes.length > 0) {
+      iframes.forEach((iframe) => {
+        iframe.addEventListener("load", () => {
+          document.querySelectorAll(".iframely-embed div").forEach((div) => {
+            // Shadow Rootが存在するかチェック
+            console.log(div.shadowRoot);
+            if (div.shadowRoot) {
+              const wtElement = div.shadowRoot.querySelector(".wt");
+              const t = div.shadowRoot.querySelector(".t");
+              if (wtElement) {
+                (wtElement as HTMLElement).style.setProperty(
+                  "color",
+                  "var(--key-color)",
+                  "important"
+                );
+              }
+              if (t) {
+                (t as HTMLElement).style.setProperty(
+                  "color",
+                  "var(--key-color)",
+                  "important"
+                );
+              }
+            }
+          });
+        });
+      });
+    } else {
+      console.log("end");
+      // iframeがない場合は即座に実行
+      setTimeout(() => {
+        document.querySelectorAll(".iframely-embed div").forEach((div) => {
+          console.log(div.shadowRoot);
+          if (div.shadowRoot) {
+            const body = div.shadowRoot.querySelector(".body") as HTMLElement;
+            const bg = div.shadowRoot.querySelector("._sm") as HTMLElement;
+            const bdr = div.shadowRoot.querySelector("._sm") as HTMLElement;
+            const a = div.shadowRoot.querySelector(".wt a") as HTMLElement;
+            const t = div.shadowRoot.querySelector(".wt .t") as HTMLElement;
+            if (bg) {
+              body.style.setProperty(
+                "box-shadow",
+                "0px 0px 0px 0px",
+                "important"
+              );
+              body.style.setProperty("padding", "transparent", "important");
+              bdr.style.setProperty("border", "none", "important");
+              bg.style.setProperty("background", "transparent", "important");
+              a.style.setProperty("color", "var(--key-color)", "important");
+              t.style.setProperty("color", "var(--key-color)", "important");
+            }
+          }
+        });
+      }, 1000);
+    }
   });
 </script>
