@@ -11,6 +11,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const { title, description, image = "/OGP.png" } = Astro.props;
 ---
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-1V92GGC3ZY"
+></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() {
+    dataLayer.push(arguments);
+  }
+  gtag("js", new Date());
+
+  gtag("config", "G-1V92GGC3ZY");
+</script>
 <!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
