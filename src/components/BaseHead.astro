@@ -16,12 +16,24 @@ const { title, description, image = "/OGP.png" } = Astro.props;
 ></script>
 <script is:inline>
   window.dataLayer = window.dataLayer || [];
-  function gtag(...args) {
-    window.dataLayer.push(args);
+  function gtag() {
+    dataLayer.push(arguments);
   }
   gtag("js", new Date());
-
   gtag("config", "G-1V92GGC3ZY");
+</script>
+
+<script>
+  // View Transitions 対応: ページ遷移時にもページビューを送信
+  document.addEventListener("astro:page-load", () => {
+    if (typeof gtag !== "undefined") {
+      gtag("event", "page_view", {
+        page_location: window.location.href,
+        page_path: window.location.pathname,
+        page_title: document.title,
+      });
+    }
+  });
 </script>
 <!-- Global Metadata -->
 <meta charset="utf-8" />
