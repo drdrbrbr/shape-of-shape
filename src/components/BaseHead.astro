@@ -14,9 +14,9 @@ const { title, description, image = "/OGP.png" } = Astro.props;
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-1V92GGC3ZY"
 ></script>
-<script>
+<script is:inline>
   window.dataLayer = window.dataLayer || [];
-  function gtag(...args: any[]) {
+  function gtag(...args) {
     window.dataLayer.push(args);
   }
   gtag("js", new Date());
